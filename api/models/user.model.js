@@ -2,7 +2,7 @@ const mongoose =require('mongoose')
 const validator=require('validator')
 
 const userSchema=new mongoose.Schema({
-    name:{
+     username:{
         type:String,
         unique:true,
         required:[true,"PLease provide your name"]
