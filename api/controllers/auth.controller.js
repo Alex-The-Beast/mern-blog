@@ -3,13 +3,14 @@ const bcrypt =require('bcryptjs')
 const errorHandler =require('../utils/error')
 const express=require('express')
 const jwt =require('jsonwebtoken')
+
 const signup=async(req,res,next)=>{
     const {username,email,password}=req.body
     if(!username || !email || !password || username===''|| email ==='' || password ===''){
         next(errorHandler(400,'All fields are required'))
     }
 
-    const hashedPassword =bcrypt.hashSync(password,10)
+    const hashedPassword = bcrypt.hashSync(password,10)
     const newUser=new User({username,
         email,
         password:hashedPassword
@@ -26,21 +27,21 @@ const signup=async(req,res,next)=>{
 
 }
 
-module.exports=signup
+// module.exports=signup
 
 
 
 const signin= async (req,res,next)=>{
     const {email,password}=req.body
     if (!email || !password || email==="" || password===""){
-       return  next(errorHandler(400,"All fields are required"))
+       next(errorHandler(400,"All fields are required"))
     }
     try {
      const validUser =await User.findOne({email})
      if(!validUser){
-        next(errorHandler(404,"User not found"))
+       return  next(errorHandler(404,"User not found"))
      }
-     const validPassword=bcrypt.compare(password,validUser.password)
+     const validPassword= bcrypt.compareSync(password,validUser.password)
      if(!validPassword){
        return  next(errorHandler(400,"Invalid Password"))
      }
@@ -61,4 +62,4 @@ const signin= async (req,res,next)=>{
 
 }
 
-module.exports =signin
+module.exports={ signup ,signin }
